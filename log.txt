@@ -1,0 +1,198 @@
+[root@localhost flatris]# /bin/systemctl start docker.service
+[root@localhost flatris]# docker build -t flatris .
+Sending build context to Docker daemon 28.41 MB
+Step 1/9 : FROM node
+Trying to pull repository docker.io/library/node ... 
+latest: Pulling from docker.io/library/node
+56da78ce36e9: Pull complete 
+fbfe0f13ac45: Pull complete 
+6254ff6d0e60: Pull complete 
+e0e1e13bd9f6: Pull complete 
+b86b38b40a24: Pull complete 
+e357e1a6c1b2: Pull complete 
+f388b7dd520c: Pull complete 
+fd75ebfa3fbd: Pull complete 
+e71a5faa678a: Pull complete 
+Digest: sha256:c9f3ef4453d9f528c7e35261ad68935867ab524f9f735c457141dc8efb3dfd14
+Status: Downloaded newer image for docker.io/node:latest
+ ---> c31fbeb964cc
+Step 2/9 : RUN mkdir /app
+ ---> Running in 11abfc9a141c
+
+ ---> 6dde9799fc22
+Removing intermediate container 11abfc9a141c
+Step 3/9 : WORKDIR /app
+ ---> 26d8931dfe4e
+Removing intermediate container fbd12ab81f90
+Step 4/9 : COPY package.json /app
+ ---> 388c6c7404fa
+Removing intermediate container 4641f90aba85
+Step 5/9 : RUN yarn install
+ ---> Running in d9c37b16775e
+
+yarn install v1.22.4
+info No lockfile found.
+[1/4] Resolving packages...
+warning next > @babel/runtime-corejs2 > core-js@2.6.11: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
+warning next > styled-jsx > babel-types > babel-runtime > core-js@2.6.11: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
+warning next > webpack > micromatch > snapdragon > source-map-resolve > resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+warning next > webpack > micromatch > snapdragon > source-map-resolve > urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+warning flow-typed > @babel/polyfill > core-js@2.6.11: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
+warning jest > @jest/core > jest-config > jest-environment-jsdom > jsdom > request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+[2/4] Fetching packages...
+info fsevents@1.2.12: The platform "linux" is incompatible with this module.
+info "fsevents@1.2.12" is an optional dependency and failed compatibility check. Excluding it from installation.
+info fsevents@2.1.2: The platform "linux" is incompatible with this module.
+info "fsevents@2.1.2" is an optional dependency and failed compatibility check. Excluding it from installation.
+[3/4] Linking dependencies...
+warning "firebase-admin > @firebase/database > @firebase/auth-interop-types@0.1.4" has unmet peer dependency "@firebase/app-types@0.x".
+warning " > babel-loader@8.1.0" has unmet peer dependency "webpack@>=2".
+warning " > css-loader@3.5.1" has unmet peer dependency "webpack@^4.0.0 || ^5.0.0".
+warning "eslint-plugin-jest > @typescript-eslint/experimental-utils > @typescript-eslint/typescript-estree > tsutils@3.17.1" has unmet peer dependency "typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta".
+warning " > html-webpack-plugin@3.2.0" has unmet peer dependency "webpack@^1.0.0 || ^2.0.0 || ^3.0.0 || ^4.0.0".
+warning "react-cosmos > webpack-dev-middleware@3.7.2" has unmet peer dependency "webpack@^4.0.0".
+warning " > style-loader@1.1.3" has unmet peer dependency "webpack@^4.0.0 || ^5.0.0".
+[4/4] Building fresh packages...
+success Saved lockfile.
+Done in 34.15s.
+ ---> a9a76c8ec34b
+Removing intermediate container d9c37b16775e
+Step 6/9 : COPY . /app
+ ---> 454f392572a9
+Removing intermediate container d9b1702fad3f
+Step 7/9 : RUN yarn build
+ ---> Running in a8f273aec348
+
+yarn run v1.22.4
+$ next build web
+[7:11:41 AM] Compiling client
+[7:11:41 AM] Compiling server
+> Using external babel configuration
+> Location: "/app/babel.config.js"
+[7:11:45 AM] Compiled server in 5s
+[7:11:54 AM] Compiled client in 13s
+Done in 14.72s.
+ ---> db6f9c1cf627
+Removing intermediate container a8f273aec348
+Step 8/9 : EXPOSE 3000
+ ---> Running in 83765eef1687
+ ---> c89ecf7fc897
+Removing intermediate container 83765eef1687
+Step 9/9 : CMD yarn start
+ ---> Running in 20307d499251
+ ---> 29e07335694a
+Removing intermediate container 20307d499251
+Successfully built 29e07335694a
+
+[root@localhost flatris]# docker run -it -p "3000:3000" flatris
+yarn run v1.22.4
+$ babel-node server/start-prod.js
+Firebase not configured
+> Ready on http://localhost:3000
+New socket connection
+New socket connection
+[SOCKET] subscribe global
+Create session #1 1d9392e6 { id: '56c2a046', name: 'Test' }
+Create game 398778ca { id: '56c2a046', name: 'Test' }
+[SOCKET] subscribe 398778ca
+Backfill...
+{
+  "gameId": "398778ca",
+  "players": [
+    {
+      "userId": "56c2a046",
+      "from": 0
+    }
+  ]
+}
+[SOCKET] game-keep-alive 398778ca
+[SOCKET] game-keep-alive 398778ca
+
+
+[root@localhost flatris]# docker-compose up
+Creating network "flatris_default" with the default driver
+Building flatris
+Step 1/9 : FROM node
+ ---> c31fbeb964cc
+Step 2/9 : RUN mkdir /app
+ ---> Using cache
+ ---> 6dde9799fc22
+Step 3/9 : WORKDIR /app
+ ---> Using cache
+ ---> 26d8931dfe4e
+Step 4/9 : COPY package.json /app
+ ---> 33abc5f71f95
+Removing intermediate container 71c4870195e2
+Step 5/9 : RUN yarn install
+ ---> Running in a374282caaf0
+
+yarn install v1.22.4
+info No lockfile found.
+[1/4] Resolving packages...
+warning next > @babel/runtime-corejs2 > core-js@2.6.11: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
+warning next > styled-jsx > babel-types > babel-runtime > core-js@2.6.11: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
+warning next > webpack > micromatch > snapdragon > source-map-resolve > resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+warning next > webpack > micromatch > snapdragon > source-map-resolve > urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+warning flow-typed > @babel/polyfill > core-js@2.6.11: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
+warning jest > jest-cli > jest-config > jest-environment-jsdom > jsdom > request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+[2/4] Fetching packages...
+info fsevents@1.2.12: The platform "linux" is incompatible with this module.
+info "fsevents@1.2.12" is an optional dependency and failed compatibility check. Excluding it from installation.
+info fsevents@2.1.2: The platform "linux" is incompatible with this module.
+info "fsevents@2.1.2" is an optional dependency and failed compatibility check. Excluding it from installation.
+[3/4] Linking dependencies...
+warning "firebase-admin > @firebase/database > @firebase/auth-interop-types@0.1.4" has unmet peer dependency "@firebase/app-types@0.x".
+warning " > babel-loader@8.1.0" has unmet peer dependency "webpack@>=2".
+warning " > css-loader@3.5.1" has unmet peer dependency "webpack@^4.0.0 || ^5.0.0".
+warning "eslint-plugin-jest > @typescript-eslint/experimental-utils > @typescript-eslint/typescript-estree > tsutils@3.17.1" has unmet peer dependency "typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta".
+warning " > html-webpack-plugin@3.2.0" has unmet peer dependency "webpack@^1.0.0 || ^2.0.0 || ^3.0.0 || ^4.0.0".
+warning "react-cosmos > webpack-dev-middleware@3.7.2" has unmet peer dependency "webpack@^4.0.0".
+warning " > style-loader@1.1.3" has unmet peer dependency "webpack@^4.0.0 || ^5.0.0".
+[4/4] Building fresh packages...
+success Saved lockfile.
+Done in 33.36s.
+ ---> 14211382a85c
+Removing intermediate container a374282caaf0
+Step 6/9 : COPY . /app
+ ---> e12df9d113ae
+Removing intermediate container 10fdf781a1ca
+Step 7/9 : RUN yarn build
+ ---> Running in 9c43b6677386
+
+yarn run v1.22.4
+$ next build web
+[7:18:55 AM] Compiling client
+[7:18:55 AM] Compiling server
+> Using external babel configuration
+> Location: "/app/babel.config.js"
+[7:19:00 AM] Compiled server in 5s
+[7:19:08 AM] Compiled client in 13s
+Done in 14.62s.
+ ---> b00813f3c896
+Removing intermediate container 9c43b6677386
+Step 8/9 : EXPOSE 3000
+ ---> Running in f461b064a6ee
+ ---> af95a4bb5f5f
+Removing intermediate container f461b064a6ee
+Step 9/9 : CMD yarn start
+ ---> Running in 164aed0b688b
+ ---> ce340ea4b5e0
+Removing intermediate container 164aed0b688b
+Successfully built ce340ea4b5e0
+WARNING: Image for service flatris was built because it did not already exist. To rebuild this image you must use `docker-compose build` or `docker-compose up --build`.
+Creating flatris_flatris_1 ... done
+Attaching to flatris_flatris_1
+flatris_1  | yarn run v1.22.4
+flatris_1  | $ babel-node server/start-prod.js
+flatris_1  | Firebase not configured
+flatris_1  | > Ready on http://localhost:3000
+flatris_1  | [BABEL] Note: The code generator has deoptimised the styling of /app/web/.next/server/static/b02HubO5Xg~txgx32xAN9/pages/join.js as it exceeds the max of 500KB.
+flatris_1  | New socket connection
+flatris_1  | New socket connection
+flatris_1  | New socket connection
+flatris_1  | New socket connection
+flatris_1  | [SOCKET] subscribe global
+^CGracefully stopping... (press Ctrl+C again to force)
+Stopping flatris_flatris_1 ... 
+Killing flatris_flatris_1 ... done
+
